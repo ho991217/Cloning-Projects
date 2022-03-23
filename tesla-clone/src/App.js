@@ -1,7 +1,9 @@
-import TopNavigation from "./components/TopNavigation";
+// import TopNavigation from "./components/TopNavigation";
 import Router from "./routes/Router";
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
+import "./static/fonts/font.css";
+import Nav from "./components/Nav";
 
 const GlobalStyle = createGlobalStyle`
 ${reset}
@@ -14,7 +16,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <TopNavigation />
+      <Nav />
       <Router />
     </>
   );
