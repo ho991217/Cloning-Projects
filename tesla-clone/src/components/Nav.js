@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion";
 import Highlight from "./Highlight";
 
 const SiteHeaderWrapper = styled.div`
@@ -13,9 +12,22 @@ const SiteHeaderWrapper = styled.div`
   }
 `;
 
+const BlurDiv = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  transition: backdrop-filter 0.2s ease-in-out;
+`;
+
 const GlobalMenu = styled.div`
   width: 100%;
   box-sizing: border-box;
+  position: relative;
 `;
 
 const SiteHeader = styled.header`
@@ -75,30 +87,34 @@ const NavigationText = styled.span`
   font-size: 14px;
 `;
 
-const RightMenuWrapper = styled.ol`
-  display: inline-flex;
-  align-items: center;
-  width: 240px;
+const MenuDialog = styled.div`
+  height: 100vh;
+  width: 311px;
+  animation: show 1s ease normal;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: #ffffff;
+  z-index: 99;
+  @keyframes show {
+    from {
+      transform: translateX(110%);
+    }
+    to {
+      transform: translateX(0%);
+    }
+  }
 `;
 
-const RightMenuTab = styled.li`
-  display: list-item;
-  position: relative;
-`;
-
-const RightMenuLink = styled.a`
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  display: block;
-  padding: 4px 8px;
-  z-index: 2;
-`;
-
-const RightMenuText = styled.span`
-  margin: 0px 8px;
-  font-weight: 400;
+const MenuText = styled.div`
+  cursor: pointer;
+  user-select: none;
   font-size: 14px;
+  margin: 0px 8px;
+  padding: 8px 8px;
+  font-weight: 400;
+  display: inline-block;
+  line-height: 0px;
 `;
 
 function Nav() {
@@ -112,9 +128,11 @@ function Nav() {
     "Powerwall",
   ];
   const rightMenus = ["Shop", "계정", "메뉴"];
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <SiteHeaderWrapper>
+      {menuOpen && <BlurDiv onClick={() => setMenuOpen(false)} />}
       <GlobalMenu>
         <SiteHeader>
           <SiteLogoContainer>
@@ -141,41 +159,41 @@ function Nav() {
                 >
                   <NavigationText>{item}</NavigationText>
                 </NavigationLink>
-                {focused === item ? (
-                  <Highlight
-                    transition={{
-                      layout: {
-                        duration: 0.35,
-                        ease: "easeInOut",
-                      },
-                    }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    layoutId="highlight"
-                  />
-                ) : null}
+                {focused === item ? <Highlight /> : null}
               </NavigationTab>
             ))}
           </NavigationWrapper>
-          <RightMenuWrapper onMouseLeave={() => setFocused(null)}>
+          <NavigationWrapper
+            onMouseLeave={() => setFocused(null)}
+            style={{ width: "240px" }}
+          >
             {rightMenus.map((item) => (
-              <RightMenuTab
+              <NavigationTab
                 key={item}
                 onFocus={() => setFocused(item)}
                 onMouseEnter={() => setFocused(item)}
               >
-                <RightMenuLink>
-                  <RightMenuText>{item}</RightMenuText>
-                  {focused === item ? <Highlight /> : null}
-                </RightMenuLink>
-              </RightMenuTab>
+                {item === "메뉴" ? (
+                  <MenuText onClick={() => setMenuOpen((prev) => !prev)}>
+                    메뉴
+                    {focused === item ? <Highlight /> : null}
+                  </MenuText>
+                ) : (
+                  <NavigationLink>
+                    <NavigationText>{item}</NavigationText>
+                    {focused === item ? <Highlight /> : null}
+                  </NavigationLink>
+                )}
+              </NavigationTab>
             ))}
-          </RightMenuWrapper>
+          </NavigationWrapper>
         </SiteHeader>
-        <dialog>
-          <div></div>
-          <section></section>
-        </dialog>
+        {menuOpen && (
+          <MenuDialog>
+            <div>hi</div>
+            <section></section>
+          </MenuDialog>
+        )}
       </GlobalMenu>
     </SiteHeaderWrapper>
   );
