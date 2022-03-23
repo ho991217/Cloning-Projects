@@ -1,11 +1,15 @@
 import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 const SiteHeaderWrapper = styled.div`
   position: absolute;
   width: 100vw;
-
   display: block;
+  * {
+    font-family: "Gotham";
+  }
 `;
 
 const GlobalMenu = styled.div`
@@ -16,7 +20,7 @@ const GlobalMenu = styled.div`
 const SiteHeader = styled.header`
   display: flex;
   align-items: center;
-  justify-content: space-between; 
+  justify-content: space-between;
   width: 100%;
   height: 54px;
 `;
@@ -45,7 +49,81 @@ const SiteLogo = styled.svg`
   inline-size: 120px;
 `;
 
+const NavigationWrapper = styled.ol`
+  display: inline-flex;
+  align-items: center;
+`;
+
+const NavigationTab = styled.li`
+  display: list-item;
+  position: relative;
+`;
+
+const NavigationLink = styled.a`
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  display: block;
+  padding: 4px 8px;
+  z-index: 2;
+`;
+
+const NavigationText = styled.span`
+  margin: 0px 8px;
+  font-weight: 400;
+  font-size: 14px;
+`;
+
+const Highlight = styled(motion.div)`
+  position: absolute;
+  bottom: -15%;
+  left: 0px;
+  right: 0;
+  width: 100%;
+  height: 130%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  z-index: 0;
+`;
+
+const RightMenuWrapper = styled.ol`
+  display: inline-flex;
+  align-items: center;
+  width: 240px;
+`;
+
+const RightMenuTab = styled.li`
+  display: list-item;
+  position: relative;
+`;
+
+const RightMenuLink = styled.a`
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  display: block;
+  padding: 4px 8px;
+  z-index: 2;
+`;
+
+const RightMenuText = styled.span`
+  margin: 0px 8px;
+  font-weight: 400;
+  font-size: 14px;
+`;
+
 function Nav() {
+  const [focused, setFocused] = useState(null);
+  const tabs = [
+    "Model S",
+    "Model 3",
+    "Model X",
+    "Model Y",
+    "Cybertruck",
+    "Powerwall",
+  ];
+  const rightMenus = ["Shop", "계정", "메뉴"];
+
   return (
     <SiteHeaderWrapper>
       <GlobalMenu>
@@ -60,8 +138,58 @@ function Nav() {
               </SiteLogo>
             </SiteLogoLink>
           </SiteLogoContainer>
-          <ol>menu</ol>
-          <ol></ol>
+          <NavigationWrapper onMouseLeave={() => setFocused(null)}>
+            {tabs.map((item) => (
+              <NavigationTab
+                key={item}
+                onFocus={() => setFocused(item)}
+                onMouseEnter={() => setFocused(item)}
+              >
+                <NavigationLink
+                  href={`https://www.tesla.com/ko_kr/${item
+                    .replace(/\s/g, "")
+                    .toLowerCase()}`}
+                >
+                  <NavigationText>{item}</NavigationText>
+                </NavigationLink>
+                {focused === item ? (
+                  <Highlight
+                    transition={{
+                      layout: {
+                        duration: 0.35,
+                        ease: "easeInOut",
+                      },
+                    }}
+                    layoutId="highlight"
+                  />
+                ) : null}
+              </NavigationTab>
+            ))}
+          </NavigationWrapper>
+          <RightMenuWrapper onMouseLeave={() => setFocused(null)}>
+            {rightMenus.map((item) => (
+              <RightMenuTab
+                key={item}
+                onFocus={() => setFocused(item)}
+                onMouseEnter={() => setFocused(item)}
+              >
+                <RightMenuLink>
+                  <RightMenuText>{item}</RightMenuText>
+                  {focused === item ? (
+                    <Highlight
+                      transition={{
+                        layout: {
+                          duration: 0.35,
+                          ease: "easeInOut",
+                        },
+                      }}
+                      layoutId="highlight"
+                    />
+                  ) : null}
+                </RightMenuLink>
+              </RightMenuTab>
+            ))}
+          </RightMenuWrapper>
         </SiteHeader>
         <dialog>
           <div></div>
