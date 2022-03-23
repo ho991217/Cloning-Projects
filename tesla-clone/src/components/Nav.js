@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import Highlight from "./Highlight";
 
 const SiteHeaderWrapper = styled.div`
   position: absolute;
@@ -72,18 +73,6 @@ const NavigationText = styled.span`
   margin: 0px 8px;
   font-weight: 400;
   font-size: 14px;
-`;
-
-const Highlight = styled(motion.div)`
-  position: absolute;
-  bottom: -15%;
-  left: 0px;
-  right: 0;
-  width: 100%;
-  height: 130%;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  z-index: 0;
 `;
 
 const RightMenuWrapper = styled.ol`
@@ -160,6 +149,8 @@ function Nav() {
                         ease: "easeInOut",
                       },
                     }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     layoutId="highlight"
                   />
                 ) : null}
@@ -175,17 +166,7 @@ function Nav() {
               >
                 <RightMenuLink>
                   <RightMenuText>{item}</RightMenuText>
-                  {focused === item ? (
-                    <Highlight
-                      transition={{
-                        layout: {
-                          duration: 0.35,
-                          ease: "easeInOut",
-                        },
-                      }}
-                      layoutId="highlight"
-                    />
-                  ) : null}
+                  {focused === item ? <Highlight /> : null}
                 </RightMenuLink>
               </RightMenuTab>
             ))}
